@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-import flickr from './flickrAPI.jsx'
+import flickr from './flickrAPI.jsx';
+import moment from 'moment';
 
 class TripDetailsUser extends React.Component {
   constructor(props) {
@@ -88,13 +89,13 @@ let TripDetails = (props) => {
   const startDate = moment().format(startDateRaw); // October 31st 2016, 2:37:13 pm
   const endDateRaw = props.info.end_date;
   const endDate = moment().format(endDateRaw); // October 31st 2016, 2:37:13 pm
-  const inDays = startDate.fromNow()
+  // const inDays = startDate.fromNow()
   return (
     <div className="mt-1">
       <h4> Your trip: {props.info.title} </h4>
       <h4> About: {props.info.description} </h4>
-      <h4> Start Date: {props.info.start_date} </h4>
-      <h4> End Date: {props.info.end_date} </h4>
+      <h4> Start Date: {startDate} </h4>
+      <h4> End Date: {endDate} </h4>
       <h4> Where: {props.info.address} </h4>
     </div>
   )

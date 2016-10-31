@@ -18,12 +18,13 @@ class App extends React.Component {
 
   }
   signOut() {
+    var context = this;
     $.ajax({
       type: 'GET',
       url: '/SignOut',
     }).done(function() {
       console.log('successful sign out');
-      this.loginStatus('')
+      context.loginStatus('')
       window.location = window.location.pathname + '#/SignIn';
     }).fail(function() {
       console.log('failed sign out');
