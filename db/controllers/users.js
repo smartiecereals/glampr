@@ -1,7 +1,7 @@
 var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/index.js').User;
 var Trip = require('../models/index.js').Trip;
-var phoneInvite = require('../../webWorker.js');
+var phoneInvite = require('../../webWorker.js').phoneInvite;
 
 var comparePassword = function(user, attemptedPassword, callback) {
   bcrypt.compare(attemptedPassword, user.get('password'), function(err, isMatch) {
@@ -74,6 +74,7 @@ var inviteMembers = function(orgName, users, trip, callback) {
         });
       } else {
         user.addTrip(trip, {invite_status: 'invited', role: 'member'}).then(function() {
+          phoneInvite(users[userIndex], msgGen(orgName))
           inviteOne(userIndex + 1);
         });
       }

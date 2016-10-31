@@ -98,10 +98,10 @@ app.get('/SignOut', function(req, res) {
 
 app.post('/SignUp', function(req, res) {
 
-  var email = req.body.email;
+  var phoneNumber = req.body.phone_number;
   var password = req.body.password;
 
-  userController.findOne({where: {email: email}}, function(user) {
+  userController.findOne({where: {phone_number: phoneNumber}}, function(user) {
 
     if (!user) {
       bcrypt.hash(password, null, null, function(err, hash) {

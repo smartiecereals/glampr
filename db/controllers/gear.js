@@ -74,6 +74,7 @@ var insertGear = function(gear, tripId, callback) {
 }
 
 var editGearStatus = function(boughtGear, userEmail, tripId, callback) {
+  console.log('boughtGear: ', boughtGear)
   User.find({where: {email: userEmail}}).then(function(user) {
     boughtGear.forEach(function(gearId) {
       GearUsers.find({where: {gear_id: parseInt(gearId), user_id: user.get('id')}})
