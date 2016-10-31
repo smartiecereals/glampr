@@ -9,7 +9,7 @@ class TripDetailsUser extends React.Component {
     this.state = {
       //inputs: false;
       tripInfo: {
-        description: 'Kilimanjaro'
+        address: 'Kilimanjaro'
       }
     }
     this.getTripDetails = this.getTripDetails.bind(this);
@@ -27,20 +27,19 @@ class TripDetailsUser extends React.Component {
       url: '/tripDetailsUser',
     }).done(function(data){
       console.log(data);
-      context.getTripDetails(data);
+      context.getTripDetails(data, context.getPhotosfromFlickr());
       console.log('successful get from terms');
     }).fail(function(){
       console.log('failed to get from terms');
     });
 
     // get photos from flickr based on trip description
-    this.getPhotosfromFlickr();
-
+    
   }
 
   getPhotosfromFlickr() {
-    var description = this.state.tripInfo.description
-    flickr.getAllPhotosAsync(description, this.setPhotoState);
+    var location = this.state.tripInfo.address
+    flickr.getAllPhotosAsync(location, this.setPhotoState);
   }
 
   setPhotoState(results) {
@@ -52,18 +51,19 @@ class TripDetailsUser extends React.Component {
     return this.state.tripInfo.description;
   }
 
-  getTripDetails(data) {
+  getTripDetails(data, callback) {
     console.log(data, 'data');
     if (data) {
       var tripInfo = {};
       tripInfo.title = data.title;
-      var des = data.description || 'Kilimanjaro';
-      tripInfo.description = des;
+      tripInfo.description = data.description;
       tripInfo.start_date = data.start_date;
       tripInfo.end_date = data.end_date;
-      tripInfo.address = data.address;
+      var location = data.address || 'Kilimanjaro';
+      tripInfo.address = data.location;
       this.setState({tripInfo: tripInfo});
     }
+    callback();
   }
 
   render() {
@@ -90,6 +90,7 @@ let TripDetails = (props) => {
   const endDateRaw = props.info.end_date;
   const endDate = moment().format(endDateRaw); // October 31st 2016, 2:37:13 pm
   // const inDays = startDate.fromNow()
+
   return (
     <div className="mt-1">
       <h4> Your trip: {props.info.title} </h4>
