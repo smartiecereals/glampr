@@ -8,9 +8,7 @@ class TripDetailsUser extends React.Component {
     super(props);
     this.state = {
       //inputs: false;
-      tripInfo: {
-        description: 'Kilimanjaro'
-      }
+      tripInfo: {}
     }
     this.getTripDetails = this.getTripDetails.bind(this);
     this.setPhotoState = this.setPhotoState.bind(this);
@@ -34,13 +32,7 @@ class TripDetailsUser extends React.Component {
     });
 
     // get photos from flickr based on trip description
-    this.getPhotosfromFlickr();
-
-  }
-
-  getPhotosfromFlickr() {
-    var description = this.state.tripInfo.description
-    flickr.getAllPhotosAsync(description, this.setPhotoState);
+    
   }
 
   setPhotoState(results) {
@@ -57,12 +49,14 @@ class TripDetailsUser extends React.Component {
     if (data) {
       var tripInfo = {};
       tripInfo.title = data.title;
-      var des = data.description || 'Kilimanjaro';
-      tripInfo.description = des;
+      tripInfo.description = data.description;
       tripInfo.start_date = data.start_date;
       tripInfo.end_date = data.end_date;
-      tripInfo.address = data.address;
+      var location = data.address || 'Kilimanjaro';
+      console.log(location, 'location') //Himalayas
+      tripInfo.address = data.location;
       this.setState({tripInfo: tripInfo});
+      flickr.getAllPhotosAsync(location, this.setPhotoState);
     }
   }
 
@@ -90,6 +84,7 @@ let TripDetails = (props) => {
   const endDateRaw = props.info.end_date;
   const endDate = moment().format(endDateRaw); // October 31st 2016, 2:37:13 pm
   // const inDays = startDate.fromNow()
+
   return (
     <div className="mt-1">
       <h4> Your trip: {props.info.title} </h4>
