@@ -8,9 +8,7 @@ class TripDetailsUser extends React.Component {
     super(props);
     this.state = {
       //inputs: false;
-      tripInfo: {
-        address: 'Kilimanjaro'
-      }
+      tripInfo: {}
     }
     this.getTripDetails = this.getTripDetails.bind(this);
     this.setPhotoState = this.setPhotoState.bind(this);
@@ -27,7 +25,7 @@ class TripDetailsUser extends React.Component {
       url: '/tripDetailsUser',
     }).done(function(data){
       console.log(data);
-      context.getTripDetails(data, context.getPhotosfromFlickr());
+      context.getTripDetails(data);
       console.log('successful get from terms');
     }).fail(function(){
       console.log('failed to get from terms');
@@ -35,11 +33,6 @@ class TripDetailsUser extends React.Component {
 
     // get photos from flickr based on trip description
     
-  }
-
-  getPhotosfromFlickr() {
-    var location = this.state.tripInfo.address
-    flickr.getAllPhotosAsync(location, this.setPhotoState);
   }
 
   setPhotoState(results) {
@@ -51,7 +44,7 @@ class TripDetailsUser extends React.Component {
     return this.state.tripInfo.description;
   }
 
-  getTripDetails(data, callback) {
+  getTripDetails(data) {
     console.log(data, 'data');
     if (data) {
       var tripInfo = {};
@@ -60,10 +53,11 @@ class TripDetailsUser extends React.Component {
       tripInfo.start_date = data.start_date;
       tripInfo.end_date = data.end_date;
       var location = data.address || 'Kilimanjaro';
+      console.log(location, 'location') //Himalayas
       tripInfo.address = data.location;
       this.setState({tripInfo: tripInfo});
+      flickr.getAllPhotosAsync(location, this.setPhotoState);
     }
-    callback();
   }
 
   render() {
