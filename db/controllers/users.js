@@ -24,7 +24,7 @@ var update = function(user, req, callback) {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     password: req.body.password,
-    phone_number: req.body.phone_number,
+    emial: req.body.email,
     tags: null
   })
   .then(function(user) {
@@ -44,11 +44,7 @@ var findAll = function(callback) {
 
 var findOne = function(query, callback) {
   User.findAll(query).done(function(users) {
-    // if (err) {
-    //   callback(err);
-    // } else {
       callback(users[0]);
-    // }
   });
 };
 
@@ -65,9 +61,9 @@ var inviteMembers = function(orgName, users, trip, callback) {
     }
     User.find({where: {phone_number: users[userIndex]}}).then(function(user) {
       if (!user) {
-        //send invite to user via their email e.g: sendInvite(users[userIndex])
         User.create({phone_number: users[userIndex]}).then(function(user) {
           user.addTrip(trip, {invite_status: 'invited', role: 'member'}).then(function() {
+            //send invite to user via sms
             phoneInvite(users[userIndex], msgGen(orgName))
             inviteOne(userIndex + 1);
           });
