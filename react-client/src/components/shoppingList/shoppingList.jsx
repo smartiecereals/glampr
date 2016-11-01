@@ -72,8 +72,10 @@ class ShoppingList extends React.Component {
   handleCheckbox(e) {
     let item = e.target.id;
     let currList = this.state.checkList;
-    console.log(currList);
-    currList.push(item);
+    if (currList[e.target.id]) {
+      currList[e.target.id] = false;
+    }
+    currList[e.target.id] = !currList[e.target.id];
     this.setState({checkList: currList})
   }
 
