@@ -41,7 +41,6 @@ app.post('/SignIn', function(req, res) {
   var password = req.body.password;
 
   userController.findOne({where: {email: email}}, function(user) {
-    console.log('*******Recieve signin ', user)
     user.getTrips().then(function(trips) {
       var tripId = false;
       if(trips[0] !== undefined) {
@@ -50,17 +49,13 @@ app.post('/SignIn', function(req, res) {
 
       var response = {};
       response.status = tripId;
-      console.log('response: ', response);
+
       if (!user) {
         response.auth = false;
         res.send(response)
       } else {
-        console.log(user.get('first_name'))
-        console.log(password)
         userController.comparePassword(user, password, function(match) {
-          console.log('match: ', match)
           if (match) {
-            console.log('its a match')
             response.auth = true;
             util.createSession(req, res, user, response);
           } else {
@@ -73,7 +68,9 @@ app.post('/SignIn', function(req, res) {
   });
 });
 
+// When sign in page loads, session is checked
 app.get('/SignIn', util.checkAuth, function(req, res) {
+  // find the user 
   userController.findOne({where: {email: req.session.email}}, function(user) {
     user.getTrips().then(function(trips) {
       var tripId = false;
@@ -91,7 +88,6 @@ app.get('/SignUp', util.checkAuth, function(req, res) {
 
 app.get('/SignOut', function(req, res) {
   req.session.destroy(function() {
-    // res.redirect('/');
     res.send('session destroyed');
   });
 });
@@ -113,7 +109,6 @@ app.post('/SignUp', function(req, res) {
 
     } else {  //if user exists
 
-      console.log('Account already exists');
       bcrypt.hash(password, null, null, function(err, hash) {
 
         req.body.password = hash;
